@@ -6,18 +6,26 @@ import Product from '../pages/Product';
 import Cart from '../pages/Cart';
 import Auth from '../pages/Auth';
 import Account from '../pages/Account';
-import WithAuth from '../components/protectedRoutes/withAuth';
+import WithAuth from '../components/protectedRoutes/WithAuth';
 import NoAuth from '../components/protectedRoutes/NoAuth';
+import Orders from '../pages/Orders';
+import Order from '../pages/Order';
+import AccountLayout from '../components/layout/AccountLayout';
+import Success from '../pages/Sucess';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        Component: Layout,
+        element: <Layout />,
         children: [
-            { index: true, Component: Main },
-            { path: ':category', Component: Category },
-            { path: ':category/:id', Component: Product },
-            { path: 'cart', Component: Cart },
+            { index: true, element: <Main /> },
+            { path: ':category', element: <Category /> },
+            { path: ':category/:id', element: <Product /> },
+            { path: 'cart', element: <Cart /> },
+            {
+                path: 'success',
+                element: <Success />,
+            },
             {
                 path: 'signup',
                 element: (
@@ -38,12 +46,25 @@ const router = createBrowserRouter([
                 path: 'account',
                 element: (
                     <WithAuth>
-                        <Account />
+                        <AccountLayout />
                     </WithAuth>
                 ),
+                children: [
+                    {
+                        index: true,
+                        element: <Account />,
+                    },
+                    {
+                        path: 'orders',
+                        element: <Orders />,
+                    },
+                    {
+                        path: 'orders/:id',
+                        element: <Order />,
+                    },
+                ],
             },
         ],
     },
 ]);
-
 export default router;

@@ -28,7 +28,7 @@ const Button = ({
         large: 'px-6 h-12 text-lg rounded-xl',
     };
     const classes = clsx(
-        'flex items-center justify-center gap-2 font-semibold transition-colors duration-200 cursor-pointer',
+        'flex items-center justify-center gap-2 font-semibold transition-colors duration-200 cursor-pointer disabled:bg-gray-500 disabled:pointer-events-none',
         colorClasses[color],
         sizeClasses[size],
         className

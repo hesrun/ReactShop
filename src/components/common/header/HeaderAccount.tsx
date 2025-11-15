@@ -1,4 +1,4 @@
-import { LogIn, LogOut, User } from 'lucide-react';
+import { LogIn, LogOut, LucideNotebookText, User } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { userStore } from '../../../store/userStore';
@@ -23,6 +23,16 @@ const HeaderAccount = observer(() => {
                     </span>
                     <div className="absolute top-full min-w-full pt-2">
                         <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all">
+                            <Link
+                                to="account/orders"
+                                className="flex items-center gap-2 text-sm font-semibold px-4 py-2 border-b border-gray-100 cursor-pointer hover:bg-sky-50"
+                            >
+                                <LucideNotebookText
+                                    size={18}
+                                    className="text-sky-500"
+                                />
+                                Orders
+                            </Link>
                             <Link
                                 to="/account"
                                 className="flex items-center gap-2 text-sm font-semibold px-4 py-2 border-b border-gray-100 cursor-pointer hover:bg-sky-50"

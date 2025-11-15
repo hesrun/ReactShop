@@ -2,11 +2,12 @@ import { makeAutoObservable } from 'mobx';
 import supabase from '../api/supabase';
 import type { User } from '@supabase/supabase-js';
 import { toast } from 'react-toastify';
+import { loadingStore } from './loadingStore';
 
 class UserStore {
     user: User | null = null;
-    loading: boolean = false;
     error: string | null = null;
+    loading: boolean = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -14,9 +15,26 @@ class UserStore {
         supabase.auth.onAuthStateChange((_, session) => {
             this.user = session?.user ?? null;
         });
+
+        this.initUser();
+    }
+
+    async initUser() {
+        loadingStore.start();
+        this.loading = true;
+        const { data, error } = await supabase.auth.getSession();
+        if (data.session?.user) {
+            this.user = data.session.user;
+        } else if (error) {
+            this.error = error.message;
+            toast.error(this.error);
+        }
+        loadingStore.stop();
+        this.loading = false;
     }
 
     async logout() {
+        loadingStore.start();
         const { error } = await supabase.auth.signOut();
         if (error) {
             this.error = error.message;
@@ -25,51 +43,39 @@ class UserStore {
             this.user = null;
             toast.info('You was logout');
         }
-    }
-
-    async getSession() {
-        const { data, error } = await supabase.auth.getSession();
-        if (data.session?.user) {
-            this.user = data.session?.user;
-            console.log('setSession', this.user);
-        } else if (error) {
-            this.error = error.message;
-            toast.error(this.error);
-        }
+        loadingStore.stop();
     }
 
     async signIn({ email, password }: { email: string; password: string }) {
-        this.loading = true;
+        loadingStore.start();
         const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
+            email,
+            password,
         });
         if (data?.user) {
             this.user = data.user;
             toast.success('You are logged');
-            console.log('signUp', this.user);
         } else if (error) {
             this.error = error.message;
             toast.error(this.error);
         }
-        this.loading = false;
+        loadingStore.stop();
     }
 
     async signUp({ email, password }: { email: string; password: string }) {
-        this.loading = true;
+        loadingStore.start();
         const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
+            email,
+            password,
         });
         if (data?.user) {
             this.user = data.user;
             toast.success('New account was created');
-            console.log('signUp', this.user);
         } else if (error) {
             this.error = error.message;
             toast.error(this.error);
         }
-        this.loading = false;
+        loadingStore.stop();
     }
 }
 

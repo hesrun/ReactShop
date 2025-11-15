@@ -9,7 +9,7 @@ const CategoriesNav = () => {
     );
 
     return (
-        <div className="container py-4 mb-8">
+        <div className="py-4 mb-8">
             {data && data.length > 0 && (
                 <div className="flex flex-wrap gap-x-2 gap-y-2">
                     {data.map((category) => (

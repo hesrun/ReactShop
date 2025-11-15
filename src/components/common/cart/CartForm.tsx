@@ -1,7 +1,11 @@
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import Input from '../../ui/Input';
-import type { CartProduct } from '../../../types/Types';
+import type { CartProduct, NewOrder } from '../../../types/Types';
 import { ordersStore } from '../../../store/ordersStore';
+import { useNavigate } from 'react-router';
+import { cartStore } from '../../../store/cartStore';
+import Button from '../../ui/Button';
+import { observer } from 'mobx-react-lite';
 
 interface FormInput {
     fullName: string;
@@ -11,7 +15,14 @@ interface FormInput {
     comment: string;
 }
 
-const CartForm = ({ data }: { data: CartProduct[] }) => {
+interface CartFormProps {
+    data: CartProduct[];
+    total: string;
+}
+
+const CartForm = observer(({ data, total }: CartFormProps) => {
+    const navigate = useNavigate();
+
     const { control, handleSubmit } = useForm<FormInput>({
         shouldFocusError: false,
         defaultValues: {
@@ -23,11 +34,17 @@ const CartForm = ({ data }: { data: CartProduct[] }) => {
         },
     });
 
-    const onSubmit: SubmitHandler<FormInput> = (formData) => {
-        ordersStore.addOrder({
+    const onSubmit: SubmitHandler<FormInput> = async (formData) => {
+        await ordersStore.addOrder({
             ...formData,
             cart: JSON.stringify(data),
-        });
+            total: total,
+        } as NewOrder);
+
+        if (ordersStore.lastOrder) {
+            cartStore.clearCart();
+            navigate(`/success/`);
+        }
     };
 
     return (
@@ -51,7 +68,6 @@ const CartForm = ({ data }: { data: CartProduct[] }) => {
                     />
                 )}
             />
-
             <Controller
                 name="phone"
                 control={control}
@@ -68,7 +84,6 @@ const CartForm = ({ data }: { data: CartProduct[] }) => {
                     />
                 )}
             />
-
             <Controller
                 name="email"
                 control={control}
@@ -88,7 +103,6 @@ const CartForm = ({ data }: { data: CartProduct[] }) => {
                     />
                 )}
             />
-
             <Controller
                 name="address"
                 control={control}
@@ -102,7 +116,6 @@ const CartForm = ({ data }: { data: CartProduct[] }) => {
                     />
                 )}
             />
-
             <div className="col-span-2">
                 <Controller
                     name="comment"
@@ -117,17 +130,18 @@ const CartForm = ({ data }: { data: CartProduct[] }) => {
                     )}
                 />
             </div>
-
             <div className="col-span-2">
-                <button
+                <Button
                     type="submit"
-                    className="bg-blue-500 text-white py-2 px-4 rounded"
+                    color="blue"
+                    loading={ordersStore.loading}
+                    disabled={ordersStore.loading}
                 >
                     Make Order
-                </button>
+                </Button>
             </div>
         </form>
     );
-};
+});
 
 export default CartForm;

@@ -165,7 +165,10 @@ const Product = () => {
                     </Title>
                     <div className="grid gap-4">
                         {data.reviews.map((review) => (
-                            <div className="border border-black/10 rounded-xl">
+                            <div
+                                key={review.comment}
+                                className="border border-black/10 rounded-xl"
+                            >
                                 <div className="flex justify-between px-4 py-2 border-b border-black/10">
                                     <span className="font-bold text-sky-500">
                                         {review.reviewerName}

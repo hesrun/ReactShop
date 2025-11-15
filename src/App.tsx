@@ -1,24 +1,13 @@
 import { RouterProvider } from 'react-router';
 import router from './routes/routes';
 import { ToastContainer } from 'react-toastify';
-import './App.css';
-import { useEffect } from 'react';
-import { userStore } from './store/userStore';
-import { observer } from 'mobx-react-lite';
-import { toJS } from 'mobx';
+import AppLoader from './components/layout/AppLoader';
 
-const App = observer(() => {
-    useEffect(() => {
-        async function renderUser() {
-            await userStore.getSession();
-            console.log('current user:', toJS(userStore.user));
-        }
-        renderUser();
-    }, []);
-
+const App = () => {
     return (
         <>
             <RouterProvider router={router} />
+            <AppLoader />
             <ToastContainer
                 position="top-right"
                 autoClose={3000}
@@ -33,6 +22,6 @@ const App = observer(() => {
             />
         </>
     );
-});
+};
 
 export default App;

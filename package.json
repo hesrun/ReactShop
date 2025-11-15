@@ -12,6 +12,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
     "@tailwindcss/vite": "^4.1.13",
+    "@uidotdev/usehooks": "^2.4.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.544.0",
     "mobx": "^6.13.7",
@@ -21,6 +22,7 @@
     "react-hook-form": "^7.62.0",
     "react-router": "^7.9.1",
     "react-toastify": "^11.0.5",
+    "sass": "^1.94.0",
     "tailwindcss": "^4.1.13"
   },
   "devDependencies": {

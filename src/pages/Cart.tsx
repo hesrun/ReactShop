@@ -4,6 +4,7 @@ import { ShoppingCart } from 'lucide-react';
 import Title from '../components/ui/Title';
 import CartTable from '../components/common/cart/CartTable';
 import CartForm from '../components/common/cart/CartForm';
+import Cap from '../components/ui/Cap';
 
 const Cart = observer(() => {
     return (
@@ -20,14 +21,17 @@ const Cart = observer(() => {
                     <Title type="h2" className="mb-8">
                         Personal data
                     </Title>
-                    <CartForm data={cartStore.cart} />
+                    <CartForm
+                        data={cartStore.cart}
+                        total={cartStore.totalSum}
+                    />
                 </>
             )}
             {cartStore.totalItems === 0 && (
-                <div className="flex flex-col gap-4 items-center justify-center min-h-[30vh] lg:min-h-[50vh]">
-                    <ShoppingCart size={48} className="text-sky-500" />
-                    <span className="text-xl font-bold">Cart is empty</span>
-                </div>
+                <Cap
+                    icon={<ShoppingCart size={48} className="text-sky-500" />}
+                    text="Cart is empty"
+                />
             )}
         </div>
     );

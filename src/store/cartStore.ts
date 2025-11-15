@@ -53,7 +53,7 @@ class CartStore {
         this.cart = this.cart.filter((product) => product.id !== id);
         this.saveToStorage();
     }
-    clearCar() {
+    clearCart() {
         this.cart = [];
         this.saveToStorage();
     }
@@ -61,7 +61,7 @@ class CartStore {
         return this.cart.reduce((summ, item) => summ + item.quantity, 0);
     }
     get totalSum() {
-        return Number(
+        return String(
             this.cart.reduce((summ, item) => summ + item.total, 0).toFixed(2)
         );
     }

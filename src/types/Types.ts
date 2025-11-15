@@ -48,7 +48,7 @@ export interface Product {
 
 export interface CartProduct extends Product {
     quantity: number;
-    total: number;
+    total: string;
 }
 
 export interface CategoryProducts {
@@ -59,11 +59,23 @@ export interface CategoryProducts {
 }
 
 export interface Order {
+    id: number;
     user_id: string | null;
     address: string;
     cart: string;
     email: string;
     fullName: string;
     phone: string;
+    total: string;
+    created_at?: string;
     comment?: string;
+}
+export type NewOrder = Omit<Order, 'id'>;
+
+
+export interface SearchRes {
+    products: Product[],
+    total: number,
+    skip: number,
+    limit: number
 }

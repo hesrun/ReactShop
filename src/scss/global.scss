@@ -1,0 +1,6 @@
+@use 'mixins.scss' as *;
+@use '../tailwind.css';
+
+.scroll {
+    @include scrollbars(4px, rgba(white, 0.8), transparent);
+}

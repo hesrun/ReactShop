@@ -7,8 +7,8 @@ const Layout = () => {
     return (
         <>
             <Header />
-            <CategoriesNav />
             <main className="container pb-8">
+                <CategoriesNav />
                 <Outlet />
             </main>
         </>
