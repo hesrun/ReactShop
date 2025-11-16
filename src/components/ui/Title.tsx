@@ -12,7 +12,7 @@ const Title = ({ children, type, className }: TitleProps) => {
     return (
         <Title
             className={clsx(
-                'font-bold border-b border-b-black/10',
+                'font-bold border-b border-b-black/10 mb-8',
                 type === 'h1' && 'text-3xl',
                 type === 'h2' && 'text-2xl',
                 type === 'h3' && 'text-xl',

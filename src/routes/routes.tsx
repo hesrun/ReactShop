@@ -12,6 +12,7 @@ import Orders from '../pages/Orders';
 import Order from '../pages/Order';
 import AccountLayout from '../components/layout/AccountLayout';
 import Success from '../pages/Sucess';
+import Adresses from '../pages/Adresses';
 
 const router = createBrowserRouter([
     {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
                     {
                         path: 'orders/:id',
                         element: <Order />,
+                    },
+                    {
+                        path: 'adresses',
+                        element: <Adresses />,
                     },
                 ],
             },

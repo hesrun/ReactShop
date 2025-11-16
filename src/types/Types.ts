@@ -58,19 +58,33 @@ export interface CategoryProducts {
     limit: number;
 }
 
+export interface Address {
+    id: number;
+    user_id: string;
+    city: string;
+    street: string;
+    zip: string;
+}
+
+export type NewAddress = Omit<Address, 'id'>;
+
+
 export interface Order {
     id: number;
     user_id: string | null;
-    address: string;
     cart: string;
     email: string;
     fullName: string;
     phone: string;
     total: string;
+    city: string;
+    street: string;
+    zip: string;
     created_at?: string;
     comment?: string;
 }
 export type NewOrder = Omit<Order, 'id'>;
+
 
 
 export interface SearchRes {

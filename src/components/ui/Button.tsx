@@ -3,7 +3,7 @@ import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    color?: 'blue' | 'red' | 'green';
+    color?: 'blue' | 'red' | 'green' | 'gray';
     size?: 'small' | 'medium' | 'large';
     loading?: boolean;
 }
@@ -21,6 +21,7 @@ const Button = ({
         blue: 'bg-sky-500 hover:bg-sky-600 text-white',
         red: 'bg-red-500 hover:bg-red-600 text-white',
         green: 'bg-green-500 hover:bg-green-600 text-white',
+        gray: 'bg-gray-500 hover:bg-gray-600 text-white',
     };
     const sizeClasses = {
         small: 'px-3 h-8 text-sm rounded-md',
@@ -28,7 +29,7 @@ const Button = ({
         large: 'px-6 h-12 text-lg rounded-xl',
     };
     const classes = clsx(
-        'flex items-center justify-center gap-2 font-semibold transition-colors duration-200 cursor-pointer disabled:bg-gray-500 disabled:pointer-events-none',
+        'flex items-center justify-center gap-2 font-semibold transition-colors duration-200 cursor-pointer disabled:bg-gray-300 disabled:pointer-events-none',
         colorClasses[color],
         sizeClasses[size],
         className
@@ -36,8 +37,13 @@ const Button = ({
 
     return (
         <button {...props} onClick={onClick} className={classes}>
-            {children}
-            {loading && <LoaderCircle className="animate-spin" />}
+            {!loading && children}
+            {loading && (
+                <>
+                    Loading
+                    <LoaderCircle className="animate-spin" />
+                </>
+            )}
         </button>
     );
 };

@@ -43,7 +43,7 @@ const OrdersTable = observer(({ data }: { data: Order[] }) => {
                             <td className="py-4 font-bold">{item.total}$</td>
                             <td className="py-4 w-8">
                                 <button
-                                    className="p-2 text-red-400 cursor-pointer"
+                                    className="p-2 text-red-400 cursor-pointer hover:opacity-70 "
                                     title="delete order"
                                     onClick={() =>
                                         ordersStore.deleteOrder(item.id)

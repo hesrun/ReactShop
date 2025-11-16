@@ -1,84 +1,83 @@
 import { makeAutoObservable } from 'mobx';
 import supabase from '../api/supabase';
 import { toast } from 'react-toastify';
+import type { Address } from '../types/Types';
 import { userStore } from './userStore';
-import type { NewOrder, Order } from '../types/Types';
 
-const tableName = 'orders';
+const tableName = 'address';
 
-class OrdersStore {
-    orders: Order[] = [];
-    order: Order | null = null;
-    lastOrder: Order | null = null;
+class AddressStore {
+    addresses: Address[] = [];
     loading: boolean = false;
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    async addOrder(order: NewOrder) {
+    async addAddress(address: Address) {
         this.loading = true;
         try {
-            const user_id = userStore.user?.id ?? null;
-
             const { data, error } = await supabase
                 .from(tableName)
-                .insert({ ...order, user_id })
-                .select()
-                .single<Order>();
+                .insert({
+                    ...address,
+                    user_id: userStore.user?.id,
+                })
+                .select();
 
             if (error) {
                 toast.error(error.message);
-            } else if (data) {
-                toast.success(`Order #${data.id} was added`);
-                this.lastOrder = data;
+            } else if (data && data.length > 0) {
+                const newAddress = data[0];
+                this.addresses.push(newAddress);
+                toast.success('Address was added');
             }
         } finally {
             this.loading = false;
         }
     }
 
-    async getOrders() {
+    async getAddresses() {
         this.loading = true;
         try {
-            const user_id = userStore.user?.id ?? null;
-
-            const { data, error } = await supabase
-                .from(tableName)
-                .select()
-                .eq('user_id', user_id);
+            const { data, error } = await supabase.from(tableName).select();
 
             if (error) {
                 toast.error(error.message);
             } else if (data) {
-                this.orders = data;
+                this.addresses = data;
             }
         } finally {
             this.loading = false;
         }
     }
 
-    async getOrder(id: number) {
+    async editAddress(address: Address, id: number) {
         this.loading = true;
         try {
             const { data, error } = await supabase
                 .from(tableName)
-                .select()
+                .update(address)
                 .eq('id', id)
-                .single<Order>();
+                .select();
 
             if (error) {
                 toast.error(error.message);
             } else if (data) {
-                this.order = data;
+                const updatedAddress = data[0];
+                this.addresses = this.addresses.map((item) =>
+                    item.id === updatedAddress.id ? updatedAddress : item
+                );
+                toast.success('Address was edited');
             }
         } finally {
             this.loading = false;
         }
     }
 
-    async deleteOrder(id: number) {
+    async deleteAddress(id: number) {
         this.loading = true;
+
         try {
             const { data, error } = await supabase
                 .from(tableName)
@@ -88,15 +87,12 @@ class OrdersStore {
 
             if (error) {
                 toast.error(error.message);
-                return;
-            }
-
-            if (data && this.orders) {
-                const deletedId = data[0]?.id;
-                if (deletedId != null) {
-                    this.orders = this.orders.filter(order => order.id !== deletedId);
-                    toast.success(`Order #${deletedId} was deleted`);
-                }
+            } else if (data && data.length > 0) {
+                const deletedId = data[0].id;
+                this.addresses = this.addresses.filter(
+                    (item) => item.id !== deletedId
+                );
+                toast.success('Address was deleted');
             }
         } finally {
             this.loading = false;
@@ -104,4 +100,4 @@ class OrdersStore {
     }
 }
 
-export const ordersStore = new OrdersStore();
+export const addressStore = new AddressStore();

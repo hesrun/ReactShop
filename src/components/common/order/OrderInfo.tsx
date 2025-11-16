@@ -3,7 +3,9 @@ import { dateFormat } from '../../../utlis/dateFormat';
 
 const OrderInfo = ({ data }: { data: Order }) => {
     const {
-        address,
+        city,
+        street,
+        zip,
         cart: cartJson,
         email,
         fullName,
@@ -32,7 +34,7 @@ const OrderInfo = ({ data }: { data: Order }) => {
                             Address
                         </td>
                         <td className="border border-black/10 px-4 py-2">
-                            {address}
+                            {`${city}, ${street}, ${zip}`}
                         </td>
                     </tr>
                     <tr>
