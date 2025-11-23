@@ -4,10 +4,24 @@ const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!;
 const RESEND_FROM_EMAIL = Deno.env.get('RESEND_FROM_EMAIL')!;
 
 serve(async (req: Request) => {
+  // Обработка preflight (CORS)
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "*", // можно заменить на конкретный домен фронтенда
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  }
+
   try {
-	  const order = await req.json();
-	  
-    const cartHtml = JSON.parse(order.cart)
+    // Логируем запрос для дебага
+    const order = await req.json();
+    console.log("Incoming order:", order);
+
+    // Генерация HTML для письма
+    const cartHtml = JSON.parse(order.cart || "[]")
       .map((item: any) => `
         <tr>
           <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${item.title}</td>
@@ -16,7 +30,7 @@ serve(async (req: Request) => {
         </tr>
       `)
       .join("");
-    
+
     const html = `
       <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px;">
         <h2 style="color: #2b2b2b; border-bottom: 2px solid #eee; padding-bottom: 10px;">
@@ -25,21 +39,14 @@ serve(async (req: Request) => {
 
         <p style="font-size: 16px;">Your order has been successfully placed. Below are the order details:</p>
 
-        <div style="
-          background: #f9f9f9;
-          padding: 15px 20px;
-          border-radius: 8px;
-          margin-bottom: 20px;
-          border: 1px solid #e5e5e5;
-        ">
-          <p style="margin: 5px 0;"><strong>Order ID:</strong> ${order.id}</p>
-          <p style="margin: 5px 0;"><strong>Total Amount:</strong> $${order.total}</p>
-          <p style="margin: 5px 0;"><strong>Phone:</strong> ${order.phone}</p>
-          <p style="margin: 5px 0;"><strong>Email:</strong> ${order.email}</p>
+        <div style="background: #f9f9f9; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e5e5;">
+          <p><strong>Order ID:</strong> ${order.id}</p>
+          <p><strong>Total Amount:</strong> $${order.total}</p>
+          <p><strong>Phone:</strong> ${order.phone}</p>
+          <p><strong>Email:</strong> ${order.email}</p>
         </div>
 
-        <h3 style="color: #2b2b2b;">Order Items:</h3>
-
+        <h3>Order Items:</h3>
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
           <thead>
             <tr>
@@ -48,35 +55,26 @@ serve(async (req: Request) => {
               <th style="border-bottom: 2px solid #ddd; padding: 10px; text-align: right;">Total</th>
             </tr>
           </thead>
-          <tbody>
-            ${cartHtml}
-          </tbody>
+          <tbody>${cartHtml}</tbody>
         </table>
 
-        <h3 style="color: #2b2b2b;">Shipping Details:</h3>
-
-        <div style="
-          background: #f9f9f9;
-          padding: 15px 20px;
-          border-radius: 8px;
-          border: 1px solid #e5e5e5;
-        ">
-          <p style="margin: 5px 0;"><strong>City:</strong> ${order.city}</p>
-          <p style="margin: 5px 0;"><strong>Street:</strong> ${order.street}</p>
-          <p style="margin: 5px 0;"><strong>ZIP:</strong> ${order.zip}</p>
-          ${order.comment ? `<p style="margin: 5px 0;"><strong>Comment:</strong> ${order.comment}</p>` : ""}
+        <h3>Shipping Details:</h3>
+        <div style="background: #f9f9f9; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e5e5;">
+          <p><strong>City:</strong> ${order.city}</p>
+          <p><strong>Street:</strong> ${order.street}</p>
+          <p><strong>ZIP:</strong> ${order.zip}</p>
+          ${order.comment ? `<p><strong>Comment:</strong> ${order.comment}</p>` : ""}
         </div>
 
         <p style="margin-top: 30px; font-size: 14px; color: #555;">
           If you have any questions — just reply to this email.
         </p>
 
-        <p style="font-size: 14px; color: #999;">
-          — Hesrun Store
-        </p>
+        <p style="font-size: 14px; color: #999;">— Hesrun Store</p>
       </div>
     `;
-    
+
+    // Отправка письма через Resend API
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -92,16 +90,24 @@ serve(async (req: Request) => {
     });
 
     const data = await res.json();
+    console.log("Resend response:", data);
 
     return new Response(JSON.stringify({ success: true, data }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*', // CORS для ответа
+      },
     });
 
   } catch (err) {
+    console.error("Error in edge function:", err);
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
     });
   }
 });
