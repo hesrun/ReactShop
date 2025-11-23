@@ -1,11 +1,15 @@
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import Input from '../../ui/Input';
-import type { CartProduct, NewOrder } from '../../../types/Types';
+import type { Address, CartProduct, NewOrder } from '../../../types/Types';
 import { ordersStore } from '../../../store/ordersStore';
 import { useNavigate } from 'react-router';
 import { cartStore } from '../../../store/cartStore';
 import Button from '../../ui/Button';
 import { observer } from 'mobx-react-lite';
+import { userStore } from '../../../store/userStore';
+import { useEffect } from 'react';
+import useSendOrderEmail from '../../../hooks/useSendOrderEmail';
+import { toast } from 'react-toastify';
 
 interface FormInput {
     fullName: string;
@@ -20,12 +24,14 @@ interface FormInput {
 interface CartFormProps {
     data: CartProduct[];
     total: string;
+    address: Address | null;
 }
 
-const CartForm = observer(({ data, total }: CartFormProps) => {
+const CartForm = observer(({ data, total, address }: CartFormProps) => {
+    const { sendEmail, error: emailError } = useSendOrderEmail();
     const navigate = useNavigate();
 
-    const { control, handleSubmit } = useForm<FormInput>({
+    const { control, handleSubmit, reset, getValues } = useForm<FormInput>({
         shouldFocusError: false,
         defaultValues: {
             fullName: '',
@@ -39,17 +45,47 @@ const CartForm = observer(({ data, total }: CartFormProps) => {
     });
 
     const onSubmit: SubmitHandler<FormInput> = async (formData) => {
-        await ordersStore.addOrder({
+        const order = {
             ...formData,
             cart: JSON.stringify(data),
             total: total,
-        } as NewOrder);
+        };
+
+        await ordersStore.addOrder(order as NewOrder);
 
         if (ordersStore.lastOrder) {
             cartStore.clearCart();
             navigate(`/success/`);
+
+            const ok = await sendEmail(ordersStore.lastOrder);
+
+            if (!ok) {
+                toast.error(emailError || 'Email not sent');
+            } else {
+                toast.success('Email sent!');
+            }
         }
     };
+
+    useEffect(() => {
+        if (!userStore.user?.email) return;
+
+        const prev = getValues();
+        reset({
+            ...prev,
+            email: userStore.user.email,
+        });
+    }, [reset, getValues]);
+
+    useEffect(() => {
+        if (!address) return;
+
+        const prev = getValues();
+        reset({
+            ...prev,
+            ...address,
+        });
+    }, [address, reset, getValues]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">

@@ -23,7 +23,7 @@ const AddAddressModal = observer(({ address }: AddAddressModalProps) => {
 
     useEffect(() => {
         reset(address ?? { city: '', street: '', zip: '' });
-    }, [address]);
+    }, [address, reset]);
 
     const onSubmit: SubmitHandler<Address> = async (formData) => {
         if (address?.id) {

@@ -3,7 +3,7 @@ import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    color?: 'blue' | 'red' | 'green' | 'gray';
+    color?: 'blue' | 'red' | 'green' | 'gray' | 'white';
     size?: 'small' | 'medium' | 'large';
     loading?: boolean;
 }
@@ -22,6 +22,7 @@ const Button = ({
         red: 'bg-red-500 hover:bg-red-600 text-white',
         green: 'bg-green-500 hover:bg-green-600 text-white',
         gray: 'bg-gray-500 hover:bg-gray-600 text-white',
+        white: 'border border-gray-400 text-gray-800 hover:bg-gray-300 hover:border-gray-300',
     };
     const sizeClasses = {
         small: 'px-3 h-8 text-sm rounded-md',

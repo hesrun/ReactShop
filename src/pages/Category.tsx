@@ -3,12 +3,17 @@ import ProductCard from '../components/common/ProductCard';
 import useFetch from '../hooks/useFetch';
 import type { CategoryProducts } from '../types/Types';
 import Title from '../components/ui/Title';
+import NotFound from './NotFound';
 
 const Category = () => {
     const { category } = useParams();
     const { data, error, loading } = useFetch<CategoryProducts>(
         `https://dummyjson.com/products/category/${category}`
     );
+
+    if (error || !data || !data.products.length) {
+        return <NotFound />;
+    }
 
     return (
         <div>

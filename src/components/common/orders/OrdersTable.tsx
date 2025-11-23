@@ -31,17 +31,25 @@ const OrdersTable = observer(({ data }: { data: Order[] }) => {
                 <tbody>
                     {data.map((item) => (
                         <tr key={item.id}>
-                            <td className="py-4">
+                            <td className="py-4 border-b border-b border-gray-200">
                                 <Link
                                     className="text-sky-500 underline"
                                     to={`${item.id}`}
                                 >{`#${item.id}`}</Link>
                             </td>
-                            <td className="py-4">{item.fullName}</td>
-                            <td className="py-4">{item.email}</td>
-                            <td className="py-4">{item.phone}</td>
-                            <td className="py-4 font-bold">{item.total}$</td>
-                            <td className="py-4 w-8">
+                            <td className="py-4 border-b border-b border-gray-200">
+                                {item.fullName}
+                            </td>
+                            <td className="py-4 border-b border-b border-gray-200">
+                                {item.email}
+                            </td>
+                            <td className="py-4 border-b border-b border-gray-200">
+                                {item.phone}
+                            </td>
+                            <td className="py-4 border-b border-b border-gray-200 font-bold">
+                                {item.total}$
+                            </td>
+                            <td className="py-4 border-b border-b border-gray-200 w-8">
                                 <button
                                     className="p-2 text-red-400 cursor-pointer hover:opacity-70 "
                                     title="delete order"

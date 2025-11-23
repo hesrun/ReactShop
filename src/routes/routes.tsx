@@ -13,6 +13,7 @@ import Order from '../pages/Order';
 import AccountLayout from '../components/layout/AccountLayout';
 import Success from '../pages/Sucess';
 import Adresses from '../pages/Adresses';
+import NotFound from '../pages/NotFound';
 
 const router = createBrowserRouter([
     {
@@ -20,13 +21,8 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             { index: true, element: <Main /> },
-            { path: ':category', element: <Category /> },
-            { path: ':category/:id', element: <Product /> },
             { path: 'cart', element: <Cart /> },
-            {
-                path: 'success',
-                element: <Success />,
-            },
+            { path: 'success', element: <Success /> },
             {
                 path: 'signup',
                 element: (
@@ -69,6 +65,9 @@ const router = createBrowserRouter([
                     },
                 ],
             },
+            { path: ':category', element: <Category /> },
+            { path: ':category/:id', element: <Product /> },
+            { path: '*', element: <NotFound /> },
         ],
     },
 ]);

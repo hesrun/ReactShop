@@ -25,6 +25,8 @@ class UserStore {
         const { data, error } = await supabase.auth.getSession();
         if (data.session?.user) {
             this.user = data.session.user;
+            console.log(this.user);
+            
         } else if (error) {
             this.error = error.message;
             toast.error(this.error);
