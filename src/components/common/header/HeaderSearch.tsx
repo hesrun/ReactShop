@@ -1,6 +1,6 @@
 import { useClickAway, useDebounce } from '@uidotdev/usehooks';
 import { LoaderCircle, Search } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import useFetch from '../../../hooks/useFetch';
 import type { SearchRes } from '../../../types/Types';
 import { Link } from 'react-router';
@@ -11,9 +11,10 @@ const HeaderSearch = () => {
     const [isOpen, setIsOpen] = useState(false);
     const debouncedQuery = useDebounce(query, 300);
 
-    const ref = useClickAway(() => {
+    const ref = useClickAway<HTMLDivElement>(() => {
         setIsOpen(false);
     });
+
     const shouldFetch = debouncedQuery.trim().length > 0;
 
     const { data, loading } = useFetch<SearchRes>(

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router';
-import type { Product } from '../types/Types';
+import type { Product as ProductType } from '../types/Types';
 import useFetch from '../hooks/useFetch';
 import Title from '../components/ui/Title';
 import { discountPriceCalc } from '../utlis/price';
@@ -12,7 +12,7 @@ import Button from '../components/ui/Button';
 const Product = () => {
     const { id } = useParams();
     const [qty, setQty] = useState<string | number>(1);
-    const { data, error, loading } = useFetch<Product>(
+    const { data } = useFetch<ProductType>(
         `https://dummyjson.com/products/${id}`
     );
 

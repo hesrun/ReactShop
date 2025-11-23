@@ -4,7 +4,7 @@ import type { Category } from '../../types/Types';
 import clsx from 'clsx';
 
 const CategoriesNav = () => {
-    const { data, error, loading } = useFetch<Category[]>(
+    const { data } = useFetch<Category[]>(
         'https://dummyjson.com/products/categories'
     );
 

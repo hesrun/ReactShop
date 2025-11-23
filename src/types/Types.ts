@@ -48,7 +48,7 @@ export interface Product {
 
 export interface CartProduct extends Product {
     quantity: number;
-    total: string;
+    total: number;
 }
 
 export interface CategoryProducts {
@@ -76,7 +76,7 @@ export interface Order {
     email: string;
     fullName: string;
     phone: string;
-    total: string;
+    total: number;
     city: string;
     street: string;
     zip: string;

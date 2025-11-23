@@ -7,7 +7,7 @@ import NotFound from './NotFound';
 
 const Category = () => {
     const { category } = useParams();
-    const { data, error, loading } = useFetch<CategoryProducts>(
+    const { data, error } = useFetch<CategoryProducts>(
         `https://dummyjson.com/products/category/${category}`
     );
 

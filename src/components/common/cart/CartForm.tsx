@@ -23,7 +23,7 @@ interface FormInput {
 
 interface CartFormProps {
     data: CartProduct[];
-    total: string;
+    total: number;
     address: Address | null;
 }
 

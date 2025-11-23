@@ -29,6 +29,7 @@ class CartStore {
         };
 
         const existing = this.cart.find((item) => item.id === product.id);
+
         if (existing) {
             existing.quantity += qty;
             existing.total = calcTotal(
@@ -61,9 +62,9 @@ class CartStore {
         return this.cart.reduce((summ, item) => summ + item.quantity, 0);
     }
     get totalSum() {
-        return String(
-            this.cart.reduce((summ, item) => summ + item.total, 0).toFixed(2)
-        );
+        return Number(this.cart
+            .reduce((summ, item) => summ + Number(item.total), 0)
+            .toFixed(2));
     }
 }
 
