@@ -54,16 +54,15 @@ const CartForm = observer(({ data, total, address }: CartFormProps) => {
         await ordersStore.addOrder(order as NewOrder);
 
         if (ordersStore.lastOrder) {
-            cartStore.clearCart();
-            navigate(`/success/`);
-
             const ok = await sendEmail(ordersStore.lastOrder);
-
             if (!ok) {
                 toast.error(emailError || 'Email not sent');
             } else {
                 toast.success('Email sent!');
             }
+
+            cartStore.clearCart();
+            navigate(`/success/`);
         }
     };
 
