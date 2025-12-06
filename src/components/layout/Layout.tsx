@@ -1,6 +1,6 @@
-import Header from './Header';
+import Header from '../common/header/Header';
 import { Outlet } from 'react-router';
-import CategoriesNav from './CategoriesNav';
+import CategoriesNav from '../common/categories/CategoriesNav';
 
 const Layout = () => {
     return (

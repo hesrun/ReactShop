@@ -1,5 +1,5 @@
-import type { Product } from '../../types/Types';
-import { discountPriceCalc } from '../../utlis/price';
+import type { Product } from '../../../types/Types';
+import { discountPriceCalc } from '../../../utlis/price';
 import { Link } from 'react-router';
 
 const ProductCard = ({ data }: { data: Product }) => {

@@ -1,12 +1,32 @@
 import { NavLink } from 'react-router';
-import useFetch from '../../hooks/useFetch';
-import type { Category } from '../../types/Types';
+import useFetch from '../../../hooks/useFetch';
+import type { Category } from '../../../types/Types';
 import clsx from 'clsx';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 const CategoriesNav = () => {
-    const { data } = useFetch<Category[]>(
+    const { data, loading } = useFetch<Category[]>(
         'https://dummyjson.com/products/categories'
     );
+
+    if (loading) {
+        return (
+            <div className="py-4 mb-8">
+                <SkeletonTheme baseColor="#DDF2FF" highlightColor="white">
+                    <div className="flex flex-wrap gap-x-2 gap-y-2">
+                        {new Array(20).fill(0).map((_, index) => (
+                            <Skeleton
+                                key={index}
+                                width="100px"
+                                height={28}
+                                style={{ borderRadius: '20px' }}
+                            />
+                        ))}
+                    </div>
+                </SkeletonTheme>
+            </div>
+        );
+    }
 
     return (
         <div className="py-4 mb-8">

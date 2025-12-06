@@ -2,10 +2,17 @@ import { LogIn, LogOut, LucideNotebookText, User } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { userStore } from '../../../store/userStore';
+import { useState, useEffect } from 'react';
+import { useClickAway } from '@uidotdev/usehooks';
 
 const HeaderAccount = observer(() => {
+    const [showMenu, setShowMenu] = useState<boolean>(false);
     const location = useLocation();
     const navigate = useNavigate();
+
+    const ref = useClickAway<HTMLDivElement>(() => {
+        setShowMenu(false);
+    });
 
     const handleLogout = async () => {
         await userStore.logout();
@@ -14,15 +21,38 @@ const HeaderAccount = observer(() => {
         }
     };
 
+    useEffect(() => {
+        setShowMenu(false);
+    }, [location.pathname]);
+
     return (
         <>
+            {!userStore.user && (
+                <div className="flex border border-sky-500 rounded-lg overflow-hidden">
+                    <Link
+                        to="/signin"
+                        className="px-2 py-1 hover:bg-sky-500 hover:text-white transition-colors"
+                    >
+                        <span className="font-bold text-sm">Sign In</span>
+                    </Link>
+                    <Link
+                        to="/signup"
+                        className="px-2 py-1 bg-sky-500 text-white hover:bg-white hover:text-black border-l border-sky-500 transition-colors"
+                    >
+                        <span className="font-bold text-sm">Sign Up</span>
+                    </Link>
+                </div>
+            )}
             {userStore.user && (
-                <div className="relative group">
-                    <span className="text-black/70 font-bold text-sky-500 text-sm cursor-default">
+                <div ref={ref} className="relative group">
+                    <button
+                        onClick={() => setShowMenu((prev) => !prev)}
+                        className="font-bold text-sky-500 text-sm cursor-pointer"
+                    >
                         {userStore.user && userStore.user.email}
-                    </span>
-                    <div className="absolute top-full min-w-full pt-2">
-                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all">
+                    </button>
+                    {showMenu && (
+                        <div className="absolute top-8 right-0 bg-white border border-gray-100 rounded-2xl shadow-lg">
                             <Link
                                 to="account/orders"
                                 className="flex items-center gap-2 text-sm font-semibold px-4 py-2 border-b border-gray-100 cursor-pointer hover:bg-sky-50"
@@ -40,25 +70,16 @@ const HeaderAccount = observer(() => {
                                 <User size={18} className="text-sky-500" />
                                 Account
                             </Link>
-                            <a
-                                className="flex items-center gap-2 text-sm font-semibold px-4 py-2 cursor-pointer cursor-pointer hover:bg-sky-50"
+                            <button
+                                className="flex items-center gap-2 text-sm font-semibold px-4 py-2 cursor-pointer hover:bg-sky-50"
                                 onClick={handleLogout}
                             >
                                 <LogOut size={18} className="text-red-500" />
                                 Log Out
-                            </a>
+                            </button>
                         </div>
-                    </div>
+                    )}
                 </div>
-            )}
-            {!userStore.user && (
-                <Link
-                    to="/signin"
-                    className="flex items-center text-black/70 font-bold gap-1 hover:text-sky-500"
-                >
-                    <LogIn className="text-sky-500" />
-                    <span className="hidden lg:inline">Sign Up/Sign In</span>
-                </Link>
             )}
         </>
     );

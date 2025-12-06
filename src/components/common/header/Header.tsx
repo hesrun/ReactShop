@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
-import HeaderAccount from '../common/header/HeaderAccount';
-import HeaderCartBtn from '../common/header/HeaderCartBtn.tsx';
-import HeaderSearch from '../common/header/HeaderSearch';
+import HeaderAccount from './HeaderAccount';
+import HeaderCartBtn from './HeaderCartBtn.tsx';
+import HeaderSearch from './HeaderSearch';
 
 const Header = () => {
     return (
