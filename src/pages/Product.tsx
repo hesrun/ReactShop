@@ -8,13 +8,19 @@ import { dateFormat } from '../utlis/dateFormat';
 import { useState } from 'react';
 import { cartStore } from '../store/cartStore';
 import Button from '../components/ui/Button';
+import clsx from 'clsx';
 
 const Product = () => {
     const { id } = useParams();
+    const [currentImage, setCurrentImage] = useState(0);
     const [qty, setQty] = useState<string | number>(1);
     const { data } = useFetch<ProductType>(
         `https://dummyjson.com/products/${id}`
     );
+
+    const changeImageHandle = (index: number) => {
+        setCurrentImage(index);
+    };
 
     const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -59,27 +65,36 @@ const Product = () => {
                         <div className="md:col-span-6 lg:col-span-4">
                             <div className="border border-black/10 mb-2">
                                 <img
-                                    src={data.images[0]}
+                                    src={data.images[currentImage]}
                                     alt={data.title}
                                     width="1100px"
                                     height="1100px"
                                 />
                             </div>
-                            <div className="flex overflow-auto gap-2">
-                                {data.images.map((link) => (
-                                    <div
-                                        key={link}
-                                        className="border border-black/10 w-20"
-                                    >
-                                        <img
-                                            src={link}
-                                            alt={data.title}
-                                            width="1100px"
-                                            height="1100px"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                            {data.images.length > 1 && (
+                                <div className="flex overflow-auto gap-2">
+                                    {data.images.map((img, index) => (
+                                        <button
+                                            onClick={() =>
+                                                changeImageHandle(index)
+                                            }
+                                            key={img}
+                                            className={clsx(
+                                                'border border-black/10 w-20 border-gray-100 cursor-pointer',
+                                                currentImage === index &&
+                                                    'border-sky-500'
+                                            )}
+                                        >
+                                            <img
+                                                src={img}
+                                                alt={data.title}
+                                                width="1100px"
+                                                height="1100px"
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         <div className="grid gap-4 lg:gap-8 md:col-span-6 md:self-start lg:col-start-6">
                             <div className="flex items-center justify-between">

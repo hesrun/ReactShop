@@ -4,3 +4,7 @@
 .scroll {
     @include scrollbars(4px, rgba(white, 0.8), transparent);
 }
+
+.no-scrollbar {
+    @include scrollbars(0px, transparent, transparent);
+}

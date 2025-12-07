@@ -1,4 +1,4 @@
-import { LogIn, LogOut, LucideNotebookText, User } from 'lucide-react';
+import { LogOut, LucideLogIn, LucideNotebookText, User } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { userStore } from '../../../store/userStore';
@@ -28,18 +28,21 @@ const HeaderAccount = observer(() => {
     return (
         <>
             {!userStore.user && (
-                <div className="flex border border-sky-500 rounded-lg overflow-hidden">
+                <div className="flex lg:border lg:border-sky-500 rounded-lg overflow-hidden">
                     <Link
                         to="/signin"
-                        className="px-2 py-1 hover:bg-sky-500 hover:text-white transition-colors"
+                        className="hidden lg:inline px-2 py-1 hover:bg-sky-500 hover:text-white transition-colors"
                     >
                         <span className="font-bold text-sm">Sign In</span>
                     </Link>
                     <Link
                         to="/signup"
-                        className="px-2 py-1 bg-sky-500 text-white hover:bg-white hover:text-black border-l border-sky-500 transition-colors"
+                        className="lg:px-2 lg:py-1 lg:bg-sky-500 lg:text-white lg:hover:bg-white hover:text-black lg:border-l lg:border-sky-500 transition-colors"
                     >
-                        <span className="font-bold text-sm">Sign Up</span>
+                        <LucideLogIn className="text-sky-500 inline-block lg:hidden" />
+                        <span className="hidden lg:inline font-bold text-sm">
+                            Sign Up
+                        </span>
                     </Link>
                 </div>
             )}
@@ -49,10 +52,16 @@ const HeaderAccount = observer(() => {
                         onClick={() => setShowMenu((prev) => !prev)}
                         className="font-bold text-sky-500 text-sm cursor-pointer"
                     >
-                        {userStore.user && userStore.user.email}
+                        <User className="text-sky-500 inline-block lg:hidden" />
+                        <span className="hidden lg:inline">
+                            {userStore.user && userStore.user.email}
+                        </span>
                     </button>
                     {showMenu && (
                         <div className="absolute top-8 right-0 bg-white border border-gray-100 rounded-2xl shadow-lg">
+                            <div className="text-sm text-sky-500 font-bold px-4 py-2 border-b border-gray-100">
+                                {userStore.user && userStore.user.email}
+                            </div>
                             <Link
                                 to="account/orders"
                                 className="flex items-center gap-2 text-sm font-semibold px-4 py-2 border-b border-gray-100 cursor-pointer hover:bg-sky-50"

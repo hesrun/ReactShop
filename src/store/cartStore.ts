@@ -58,6 +58,19 @@ class CartStore {
         this.cart = [];
         this.saveToStorage();
     }
+    adjustQuantity(id: number, qty: number) {
+        const product = this.cart.find((item) => item.id === id);
+        if (product) {
+            product.quantity = qty;
+            product.total = Number(
+                (discountPriceCalc(
+                    product.price,
+                    product.discountPercentage
+                ) * qty).toFixed(2)
+            );
+        }
+        this.saveToStorage();
+    }
     get totalItems() {
         return this.cart.reduce((summ, item) => summ + item.quantity, 0);
     }

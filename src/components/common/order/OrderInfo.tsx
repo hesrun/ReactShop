@@ -19,100 +19,80 @@ const OrderInfo = ({ data }: { data: Order }) => {
 
     return (
         <>
-            <table className="mb-8">
-                <tbody>
-                    <tr>
-                        <td className="border border-black/10 px-4 py-2 text-sm font-semibold text-slate-600">
-                            Full name
-                        </td>
-                        <td className="border border-black/10 px-4 py-2">
-                            {fullName}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="border border-black/10 px-4 py-2 text-sm font-semibold text-slate-600">
-                            Address
-                        </td>
-                        <td className="border border-black/10 px-4 py-2">
-                            {`${city}, ${street}, ${zip}`}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="border border-black/10 px-4 py-2 text-sm font-semibold text-slate-600">
-                            Phone Number
-                        </td>
-                        <td className="border border-black/10 px-4 py-2">
-                            {phone}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="border border-black/10 px-4 py-2 text-sm font-semibold text-slate-600">
-                            Email
-                        </td>
-                        <td className="border border-black/10 px-4 py-2">
-                            {email}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="border border-black/10 px-4 py-2 text-sm font-semibold text-slate-600">
-                            Create date
-                        </td>
-                        <td className="border border-black/10 px-4 py-2">
-                            {created_at && dateFormat(created_at)}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="border border-black/10 px-4 py-2 text-sm font-semibold text-slate-600">
-                            Comment to order
-                        </td>
-                        <td className="border border-black/10 px-4 py-2">
-                            {comment}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table className="w-full ">
-                <thead>
-                    <tr>
-                        <th className="text-left border-b border-sky-500 pb-2">
-                            Image
-                        </th>
-                        <th className="text-left border-b border-sky-500 pb-2">
-                            Name
-                        </th>
-                        <th className="text-left border-b border-sky-500 pb-2">
+            <div className="mb-8 space-y-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 border-b border-black/10 pb-2">
+                    <div className="text-sm font-semibold text-slate-600">
+                        Full name
+                    </div>
+                    <div>{fullName}</div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 border-b border-black/10 pb-2">
+                    <div className="text-sm font-semibold text-slate-600">
+                        Address
+                    </div>
+                    <div>{`${city}, ${street}, ${zip}`}</div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 border-b border-black/10 pb-2">
+                    <div className="text-sm font-semibold text-slate-600">
+                        Phone Number
+                    </div>
+                    <div>{phone}</div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 border-b border-black/10 pb-2">
+                    <div className="text-sm font-semibold text-slate-600">
+                        Email
+                    </div>
+                    <div>{email}</div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 border-b border-black/10 pb-2">
+                    <div className="text-sm font-semibold text-slate-600">
+                        Create date
+                    </div>
+                    <div>{created_at && dateFormat(created_at)}</div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 pb-2">
+                    <div className="text-sm font-semibold text-slate-600">
+                        Comment to order
+                    </div>
+                    <div>{comment}</div>
+                </div>
+            </div>
+
+            <div className="hidden md:grid grid-cols-[1fr_120px_100px] gap-4 border-b border-sky-500 text-sky-500 font-semibold pb-4">
+                <div>Product</div>
+                <div>Quantity</div>
+                <div className="text-right">Total</div>
+            </div>
+
+            {cartItems.map((item) => (
+                <div
+                    key={item.id}
+                    className="relative py-4 grid grid-cols-2 gap-2 border-b border-black/10 first:pt-0 md:grid-cols-[1fr_120px_100px] md:items-center"
+                >
+                    <div className="flex items-center gap-4 col-span-2 md:col-span-1">
+                        <div className="w-10 lg:w-20 border border-black/10 shrink">
+                            <img src={item.images[0]} alt={item.title} />
+                        </div>
+                        <div className="font-bold">{item.title}</div>
+                    </div>
+
+                    <div className="md:col-span-1">
+                        <div className="text-sm text-gray-500 md:hidden ">
                             Quantity
-                        </th>
-                        <th className="text-left border-b border-sky-500 pb-2 text-right">
+                        </div>
+                        <div className="font-bold">{`${item.price}$ × ${item.quantity}`}</div>
+                    </div>
+
+                    <div className="md:col-span-1 md:text-right">
+                        <div className="text-sm text-gray-500 md:hidden ">
                             Total
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {cartItems.map((item) => (
-                        <tr key={item.id}>
-                            <td className="w-20 py-4 pr-4 border-b border-black/10">
-                                <img
-                                    className="border border-black/10"
-                                    src={item.images[0]}
-                                    alt=""
-                                />
-                            </td>
-                            <td className="py-4 pr-4 border-b border-black/10">
-                                {item.title}
-                            </td>
-                            <td className="py-4 pr-4 border-b border-black/10">
-                                {`${item.price}$ X 
-                                ${item.quantity}`}
-                            </td>
-                            <td className="text-right py-4 border-b border-black/10 font-bold">
-                                {item.total}$
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="flex gap-4 justify-end mt-4 items-baseline  text-xl">
+                        </div>
+                        <div className="font-bold">{item.total} $</div>
+                    </div>
+                </div>
+            ))}
+
+            <div className="flex gap-4 justify-end mt-4 items-baseline text-xl">
                 <div className="text-sky-500 font-bold">Total:</div>
                 <div className="font-bold">{total}$</div>
             </div>

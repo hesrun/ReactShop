@@ -7,63 +7,74 @@ import { observer } from 'mobx-react-lite';
 const OrdersTable = observer(({ data }: { data: Order[] }) => {
     return (
         <>
-            <table className="w-full">
-                <thead>
-                    <tr>
-                        <th className="text-left border-b border-sky-500 pb-2">
-                            Order ID
-                        </th>
-                        <th className="text-left border-b border-sky-500 pb-2">
+            {/* Header visible on md+ */}
+            <div className="hidden md:grid grid-cols-[120px_1fr_1fr_1fr_100px_50px] gap-4 border-b border-sky-500 text-sky-500 font-semibold pb-4">
+                <div>Order</div>
+                <div>Name</div>
+                <div>Email</div>
+                <div>Phone</div>
+                <div>Total</div>
+                <div></div>
+            </div>
+
+            {data.map((item) => (
+                <div
+                    key={item.id}
+                    className="relative py-4 grid grid-cols-2 gap-2 border-b border-black/10 first:pt-0 md:grid-cols-[120px_1fr_1fr_1fr_100px_50px] md:items-center"
+                >
+                    <div className="col-span-2 md:col-span-1">
+                        <div className="text-sm text-gray-500 md:hidden">
+                            Order
+                        </div>
+                        <Link
+                            to={`${item.id}`}
+                            className="text-sky-500 font-bold underline"
+                        >
+                            {`#${item.id}`}
+                        </Link>
+                    </div>
+
+                    <div className="col-span-2 md:col-span-1">
+                        <div className="text-sm text-gray-500 md:hidden">
                             Name
-                        </th>
-                        <th className="text-left border-b border-sky-500 pb-2">
+                        </div>
+                        <div className="font-bold">{item.fullName}</div>
+                    </div>
+
+                    <div className="col-span-2 md:col-span-1">
+                        <div className="text-sm text-gray-500 md:hidden">
                             Email
-                        </th>
-                        <th className="text-left border-b border-sky-500 pb-2">
+                        </div>
+                        <div className="font-bold">{item.email}</div>
+                    </div>
+
+                    <div className="md:col-span-1">
+                        <div className="text-sm text-gray-500 md:hidden">
                             Phone
-                        </th>
-                        <th className="text-left border-b border-sky-500 pb-2">
+                        </div>
+                        <div className="font-bold">{item.phone}</div>
+                    </div>
+
+                    <div className="md:col-span-1">
+                        <div className="text-sm text-gray-500 md:hidden">
                             Total
-                        </th>
-                        <th className="text-left border-b border-sky-500 pb-2"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((item) => (
-                        <tr key={item.id}>
-                            <td className="py-4 border-b border-b border-gray-200">
-                                <Link
-                                    className="text-sky-500 underline"
-                                    to={`${item.id}`}
-                                >{`#${item.id}`}</Link>
-                            </td>
-                            <td className="py-4 border-b border-b border-gray-200">
-                                {item.fullName}
-                            </td>
-                            <td className="py-4 border-b border-b border-gray-200">
-                                {item.email}
-                            </td>
-                            <td className="py-4 border-b border-b border-gray-200">
-                                {item.phone}
-                            </td>
-                            <td className="py-4 border-b border-b border-gray-200 font-bold">
-                                {item.total}$
-                            </td>
-                            <td className="py-4 border-b border-b border-gray-200 w-8">
-                                <button
-                                    className="p-2 text-red-400 cursor-pointer hover:opacity-70 "
-                                    title="delete order"
-                                    onClick={() =>
-                                        ordersStore.deleteOrder(item.id)
-                                    }
-                                >
-                                    <LucideTrash size={24} />
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                        </div>
+                        <div className="font-bold text-sky-500">
+                            {item.total}$
+                        </div>
+                    </div>
+
+                    <div className="absolute top-4 right-0 md:static md:text-right">
+                        <button
+                            className="p-2 text-red-400 cursor-pointer"
+                            title="delete order"
+                            onClick={() => ordersStore.deleteOrder(item.id)}
+                        >
+                            <LucideTrash size={20} />
+                        </button>
+                    </div>
+                </div>
+            ))}
         </>
     );
 });

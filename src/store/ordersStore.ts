@@ -25,7 +25,7 @@ class OrdersStore {
                 .from(tableName)
                 .insert({ ...order, user_id })
                 .select()
-                .single<Order>();
+                .single();
 
             if (error) {
                 toast.error(error.message);

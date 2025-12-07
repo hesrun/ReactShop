@@ -6,16 +6,16 @@ const Account = () => {
     return (
         <>
             <Title type="h1">Account</Title>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
                 <Link
-                    className="flex items-center justify-center gap-2 bg-sky-500 text-center text-white text-xl rounded-2xl p-4 py-8 font-bold hover:bg-sky-600 transition-colors"
+                    className="flex items-center justify-center gap-2 border border-sky-500 text-center text-sky-500 text-xl rounded-2xl p-4 py-8 font-bold hover:bg-sky-300 hover:border-sky-300 hover:text-white transition-colors"
                     to={`/account/orders`}
                 >
                     <LucideNotebookText />
                     My Orders
                 </Link>
                 <Link
-                    className="flex items-center justify-center gap-2 bg-sky-500 text-center text-white text-xl rounded-2xl p-4 py-8 font-bold hover:bg-sky-600 transition-colors"
+                    className="flex items-center justify-center gap-2 border border-sky-500 text-center text-sky-500 text-xl rounded-2xl p-4 py-8 font-bold hover:bg-sky-300 hover:border-sky-300 hover:text-white transition-colors"
                     to={`/account/adresses`}
                 >
                     <LucideHouse />

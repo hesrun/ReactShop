@@ -88,7 +88,7 @@ const CartForm = observer(({ data, total, address }: CartFormProps) => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
                 <Controller
                     name="fullName"
                     control={control}
@@ -144,7 +144,7 @@ const CartForm = observer(({ data, total, address }: CartFormProps) => {
                     )}
                 />
             </div>
-            <div className="flex gap-4">
+            <div className="grid md:grid-cols-[1fr_1fr_0.4fr] gap-4">
                 <Controller
                     name="city"
                     control={control}
@@ -155,7 +155,6 @@ const CartForm = observer(({ data, total, address }: CartFormProps) => {
                             type="text"
                             label="City"
                             error={fieldState.error?.message}
-                            className="grow"
                         />
                     )}
                 />
@@ -169,7 +168,6 @@ const CartForm = observer(({ data, total, address }: CartFormProps) => {
                             type="text"
                             label="Street"
                             error={fieldState.error?.message}
-                            className="grow"
                         />
                     )}
                 />

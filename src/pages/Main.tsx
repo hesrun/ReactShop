@@ -30,7 +30,7 @@ const Main = () => {
         <div>
             <Title type="h2">
                 Grab the best deal on{' '}
-                <span className="text-sky-500">Tablets</span>
+                <span className="text-sky-500 inline-block">Tablets</span>
             </Title>
             {tablets && tablets.products.length > 0 && (
                 <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-4 xl:gap-y-6 mb-8 xl:mb-12">
@@ -41,7 +41,9 @@ const Main = () => {
             )}
             <Title type="h2">
                 Grab the best deal on{' '}
-                <span className="text-sky-500">Mobile Accessories</span>
+                <span className="text-sky-500 inline-block">
+                    Mobile Accessories
+                </span>
             </Title>
             {mobileAccessories && mobileAccessories.products.length > 0 && (
                 <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-4 xl:gap-y-6">

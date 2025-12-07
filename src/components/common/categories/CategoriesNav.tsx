@@ -11,9 +11,9 @@ const CategoriesNav = () => {
 
     if (loading) {
         return (
-            <div className="py-4 mb-8">
+            <div className="py-4 lg:mb-8">
                 <SkeletonTheme baseColor="#DDF2FF" highlightColor="white">
-                    <div className="flex flex-wrap gap-x-2 gap-y-2">
+                    <div className="flex overflow-hidden gap-x-2 gap-y-2 lg:flex-wrap">
                         {new Array(20).fill(0).map((_, index) => (
                             <Skeleton
                                 key={index}
@@ -29,16 +29,16 @@ const CategoriesNav = () => {
     }
 
     return (
-        <div className="py-4 mb-8">
+        <div className="py-4 lg:mb-8">
             {data && data.length > 0 && (
-                <div className="flex flex-wrap gap-x-2 gap-y-2">
+                <div className="flex overflow-auto gap-x-2 gap-y-2 lg:flex-wrap no-scrollbar">
                     {data.map((category) => (
                         <NavLink
                             to={category.slug}
                             key={category.slug}
                             className={({ isActive, isPending }) =>
                                 clsx(
-                                    'bg-sky-100 rounded-2xl px-4 py-1 text-sm font-medium text-black/80 transition-colors hover:bg-sky-500 hover:text-white',
+                                    'bg-sky-100 rounded-2xl px-4 py-1 text-sm whitespace-nowrap font-medium text-black/80 transition-colors hover:bg-sky-500 hover:text-white',
                                     isPending && 'opacity-50',
                                     isActive && 'bg-sky-500 text-white'
                                 )

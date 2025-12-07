@@ -13,7 +13,7 @@ const CartAdressess = observer(({ onClick }: CartAdressessProps) => {
         addressStore.getAddresses();
     }, []);
     return (
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center gap-4 mb-8 flex-wrap">
             <div className="text-sky-500 font-semibold">My addresses:</div>
             {addressStore.addresses.map((item) => (
                 <Button
