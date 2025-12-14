@@ -9,12 +9,14 @@ import { useState } from 'react';
 import { cartStore } from '../store/cartStore';
 import Button from '../components/ui/Button';
 import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
+import NotFound from './NotFound';
 
-const Product = () => {
+const Product = observer(() => {
     const { id } = useParams();
     const [currentImage, setCurrentImage] = useState(0);
     const [qty, setQty] = useState<string | number>(1);
-    const { data } = useFetch<ProductType>(
+    const { data, error } = useFetch<ProductType>(
         `https://dummyjson.com/products/${id}`
     );
 
@@ -51,6 +53,10 @@ const Product = () => {
             setQty(1);
         }
     };
+
+    if (error) {
+        return <NotFound />;
+    }
 
     return (
         <div>
@@ -143,9 +149,16 @@ const Product = () => {
                                     <Button
                                         className="ml-4"
                                         size="large"
+                                        color={
+                                            cartStore.isIncart(data.id)
+                                                ? 'green'
+                                                : 'blue'
+                                        }
                                         onClick={handleAddProduct}
                                     >
-                                        Add to cart
+                                        {cartStore.isIncart(data.id)
+                                            ? 'Add more'
+                                            : 'Add to cart'}
                                     </Button>
                                 </div>
                                 <div className="grid self-center font-semibold leading-tight lg:flex lg:gap-2 lg:text-xl lg:ml-8">
@@ -213,6 +226,6 @@ const Product = () => {
             )}
         </div>
     );
-};
+});
 
 export default Product;

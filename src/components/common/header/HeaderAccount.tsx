@@ -58,8 +58,8 @@ const HeaderAccount = observer(() => {
                         </span>
                     </button>
                     {showMenu && (
-                        <div className="absolute top-8 right-0 bg-white border border-gray-100 rounded-2xl shadow-lg">
-                            <div className="text-sm text-sky-500 font-bold px-4 py-2 border-b border-gray-100">
+                        <div className="absolute top-8 right-0 bg-white border border-gray-100 rounded-2xl shadow-lg overflow-hidden">
+                            <div className="text-sm text-sky-500 font-bold px-4 py-2 border-b border-gray-100 lg:hidden">
                                 {userStore.user && userStore.user.email}
                             </div>
                             <Link
@@ -80,7 +80,7 @@ const HeaderAccount = observer(() => {
                                 Account
                             </Link>
                             <button
-                                className="flex items-center gap-2 text-sm font-semibold px-4 py-2 cursor-pointer hover:bg-sky-50"
+                                className="flex items-center gap-2 text-sm font-semibold px-4 py-2 cursor-pointer hover:bg-sky-50 w-full"
                                 onClick={handleLogout}
                             >
                                 <LogOut size={18} className="text-red-500" />

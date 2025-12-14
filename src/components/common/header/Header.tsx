@@ -3,31 +3,26 @@ import HeaderAccount from './HeaderAccount';
 import HeaderCartBtn from './HeaderCartBtn.tsx';
 import HeaderSearch from './HeaderSearch';
 import { LucideSearch, LucideX } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useMediaQuery, useClickAway } from '@uidotdev/usehooks';
+import { useState } from 'react';
+import { useMediaQuery } from '@uidotdev/usehooks';
 
 const Header = () => {
-    const [showSearch, setShowSearch] = useState(true);
-    const isLg = useMediaQuery('(min-width: 64rem)');
+    const isDesktop = useMediaQuery('(min-width: 64rem)');
+    const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
-    useEffect(() => {
-        setShowSearch(isLg ? true : false);
-    }, [isLg]);
-
-    const ref = useClickAway<HTMLDivElement>(() => {
-        setShowSearch(false);
-    });
+    const showSearch = isDesktop || isMobileSearchOpen;
 
     return (
         <header className="border-b border-b-black/10">
-            <div
-                ref={ref}
-                className="container flex items-center py-4 gap-4 relative"
-            >
+            <div className="container flex items-center py-4 gap-4 relative">
                 <Link to="/" className="font-black text-sky-500">
                     ReactShop
                 </Link>
-                {showSearch && <HeaderSearch />}
+                {showSearch && (
+                    <HeaderSearch
+                        onClose={() => setIsMobileSearchOpen(false)}
+                    />
+                )}
                 <div className="ml-auto flex items-center gap-4">
                     <HeaderAccount />
                     <HeaderCartBtn />
@@ -35,9 +30,9 @@ const Header = () => {
                         type="button"
                         title="Open Search"
                         className="leading-none lg:hidden"
-                        onClick={() => setShowSearch((prev) => !prev)}
+                        onClick={() => setIsMobileSearchOpen((prev) => !prev)}
                     >
-                        {showSearch ? (
+                        {isMobileSearchOpen ? (
                             <LucideX className="text-gray-600" />
                         ) : (
                             <LucideSearch className="text-sky-500" />

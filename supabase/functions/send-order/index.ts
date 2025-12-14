@@ -4,11 +4,10 @@ const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!;
 const RESEND_FROM_EMAIL = Deno.env.get('RESEND_FROM_EMAIL')!;
 
 serve(async (req: Request) => {
-  // Обработка preflight (CORS)
   if (req.method === "OPTIONS") {
     return new Response(null, {
       headers: {
-        "Access-Control-Allow-Origin": "*", // можно заменить на конкретный домен фронтенда
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
       },
@@ -16,11 +15,9 @@ serve(async (req: Request) => {
   }
 
   try {
-    // Логируем запрос для дебага
     const order = await req.json();
     console.log("Incoming order:", order);
 
-    // Генерация HTML для письма
     const cartHtml = JSON.parse(order.cart || "[]")
       .map((item: any) => `
         <tr>
@@ -74,7 +71,6 @@ serve(async (req: Request) => {
       </div>
     `;
 
-    // Отправка письма через Resend API
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -96,8 +92,7 @@ serve(async (req: Request) => {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // CORS для ответа
-      },
+        'Access-Control-Allow-Origin': '*',
     });
 
   } catch (err) {

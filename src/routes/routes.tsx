@@ -63,6 +63,10 @@ const router = createBrowserRouter([
                         path: 'adresses',
                         element: <Adresses />,
                     },
+                    {
+                        path: '*',
+                        element: <NotFound />,
+                    },
                 ],
             },
             { path: ':category', element: <Category /> },

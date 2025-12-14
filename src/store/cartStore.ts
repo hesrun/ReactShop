@@ -71,6 +71,9 @@ class CartStore {
         }
         this.saveToStorage();
     }
+    isIncart(id: number) {
+        return this.cart.some((item) => item.id === id);
+    }
     get totalItems() {
         return this.cart.reduce((summ, item) => summ + item.quantity, 0);
     }
@@ -79,6 +82,7 @@ class CartStore {
             .reduce((summ, item) => summ + Number(item.total), 0)
             .toFixed(2));
     }
+
 }
 
 export const cartStore = new CartStore();

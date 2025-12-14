@@ -3,16 +3,16 @@ import { LoaderCircle, Search } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import useFetch from '../../../hooks/useFetch';
 import type { SearchRes } from '../../../types/Types';
-import { Link } from 'react-router';
-import { discountPriceCalc } from '../../../utlis/price';
+import SearchItem from './SearchItem';
 
-const HeaderSearch = () => {
+const HeaderSearch = ({ onClose }: { onClose: () => void }) => {
     const [query, setQuery] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const debouncedQuery = useDebounce(query, 300);
 
     const ref = useClickAway<HTMLDivElement>(() => {
         setIsOpen(false);
+        setQuery('');
     });
 
     const shouldFetch = debouncedQuery.trim().length > 0;
@@ -29,8 +29,8 @@ const HeaderSearch = () => {
 
     return (
         <div
-            className="absolute z-10 px-4 left-0 top-0 h-full right-12 bg-white lg:static lg:max-w-[500px] grow mx-auto"
             ref={ref}
+            className="absolute z-10 px-4 left-0 top-0 h-full right-12 bg-white lg:static lg:max-w-[500px] grow mx-auto"
         >
             <div className="relative h-12 mt-1">
                 <Search className="hidden lg:block absolute left-4 text-sky-500 top-3" />
@@ -51,30 +51,14 @@ const HeaderSearch = () => {
                         {data && data.products.length > 0 ? (
                             <div className="grid gap-2 max-h-80 overflow-auto scroll">
                                 {data.products.map((item) => (
-                                    <Link
-                                        key={item.id}
-                                        to={`/${item.category}/${item.id}`}
-                                        className="flex items-center gap-2 bg-white/80 rounded-md text-sm mr-2 hover:bg-white transition-colors"
-                                        onClick={() => {
+                                    <SearchItem
+                                        item={item}
+                                        onClose={() => {
+                                            onClose();
                                             setIsOpen(false);
                                             setQuery('');
                                         }}
-                                    >
-                                        <div className="w-12 overflow-hidden">
-                                            <img
-                                                src={item.images[0]}
-                                                alt={item.title}
-                                            />
-                                        </div>
-                                        <div className="grow">{item.title}</div>
-                                        <div className="font-semibold pr-4">
-                                            {discountPriceCalc(
-                                                item.price,
-                                                item.discountPercentage
-                                            )}
-                                            $
-                                        </div>
-                                    </Link>
+                                    />
                                 ))}
                             </div>
                         ) : (

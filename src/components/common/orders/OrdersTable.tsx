@@ -7,7 +7,6 @@ import { observer } from 'mobx-react-lite';
 const OrdersTable = observer(({ data }: { data: Order[] }) => {
     return (
         <>
-            {/* Header visible on md+ */}
             <div className="hidden md:grid grid-cols-[120px_1fr_1fr_1fr_100px_50px] gap-4 border-b border-sky-500 text-sky-500 font-semibold pb-4">
                 <div>Order</div>
                 <div>Name</div>

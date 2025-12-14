@@ -1,15 +1,18 @@
 import { Link } from 'react-router';
-import { Trash } from 'lucide-react';
+import { Minus, Plus, Trash } from 'lucide-react';
 import type { CartProduct } from '../../../types/Types';
 import { discountPriceCalc } from '../../../utlis/price';
 import { cartStore } from '../../../store/cartStore';
-
 interface CartTableProps {
     data: CartProduct[];
     total: CartProduct['total'];
 }
 
 const CartTable = ({ data, total }: CartTableProps) => {
+    const handleQuantityChange = (id: number, qty: number) => {
+        cartStore.adjustQuantity(id, qty);
+    };
+
     return (
         <>
             <div className="hidden gap-2 md:grid grid-cols-[5fr_1fr_1fr_1fr_50px] border-b border-sky-500 text-sky-500 font-semibold pb-4">
@@ -54,7 +57,46 @@ const CartTable = ({ data, total }: CartTableProps) => {
                     </div>
                     <div>
                         <div className="text-black/50 md:hidden">Quantity</div>
-                        <div className="font-bold">{product.quantity}</div>
+                        <div className="flex">
+                            <button
+                                onClick={() =>
+                                    handleQuantityChange(
+                                        product.id,
+                                        product.quantity - 1
+                                    )
+                                }
+                                className="bg-sky-500 text-white w-8 h-8 flex items-center justify-center rounded-bl-xl rounded-tl-xl hover:bg-sky-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Minus"
+                                disabled={product.quantity <= 1}
+                            >
+                                <Minus size={16} />
+                            </button>
+                            <input
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>
+                                ) =>
+                                    handleQuantityChange(
+                                        product.id,
+                                        Number(e.target.value)
+                                    )
+                                }
+                                value={product.quantity}
+                                className="h-8 border-t border-b border-sky-500 w-8 text-center font-semibold"
+                                type="number"
+                            />
+                            <button
+                                onClick={() =>
+                                    handleQuantityChange(
+                                        product.id,
+                                        product.quantity + 1
+                                    )
+                                }
+                                className="bg-sky-500 text-white w-8 h-8 flex items-center justify-center rounded-br-xl rounded-tr-xl hover:bg-sky-600 cursor-pointer"
+                                title="Plus"
+                            >
+                                <Plus size={16} />
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <div className="text-black/50 md:hidden">Total</div>
