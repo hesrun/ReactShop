@@ -3,7 +3,16 @@ import type { Product as ProductType } from '../types/Types';
 import useFetch from '../hooks/useFetch';
 import Title from '../components/ui/Title';
 import { discountPriceCalc } from '../utlis/price';
-import { Minus, Plus, Ruler, Shield, Star, Truck } from 'lucide-react';
+import {
+    LucideHeartMinus,
+    LucideHeartPlus,
+    Minus,
+    Plus,
+    Ruler,
+    Shield,
+    Star,
+    Truck,
+} from 'lucide-react';
 import { dateFormat } from '../utlis/dateFormat';
 import { useState } from 'react';
 import { cartStore } from '../store/cartStore';
@@ -11,6 +20,8 @@ import Button from '../components/ui/Button';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import NotFound from './NotFound';
+import { favoriteStore } from '../store/favoriteStore';
+import { userStore } from '../store/userStore';
 
 const Product = observer(() => {
     const { id } = useParams();
@@ -124,30 +135,32 @@ const Product = observer(() => {
                                     {data.price} $
                                 </div>
                             </div>
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center">
-                                    <button
-                                        onClick={handleMinusQty}
-                                        className="bg-sky-500 text-white w-12 h-12 flex items-center justify-center rounded-bl-xl rounded-tl-xl hover:bg-sky-600 cursor-pointer"
-                                        title="Minus"
-                                    >
-                                        <Minus />
-                                    </button>
-                                    <input
-                                        value={qty}
-                                        onChange={handleChangeQuantity}
-                                        className="h-12 border-t border-b border-sky-500 w-12 text-center text-xl font-semibold"
-                                        type="number"
-                                    />
-                                    <button
-                                        onClick={handlePlusQty}
-                                        className="bg-sky-500 text-white w-12 h-12 flex items-center justify-center rounded-br-xl rounded-tr-xl hover:bg-sky-600 cursor-pointer"
-                                        title="Plus"
-                                    >
-                                        <Plus />
-                                    </button>
+                            <div className="">
+                                <div className="flex items-center gap-4 lg:max-w-[400px]">
+                                    <div className="flex items-center">
+                                        <button
+                                            onClick={handleMinusQty}
+                                            className="bg-sky-500 text-white w-12 h-12 flex items-center justify-center rounded-bl-xl rounded-tl-xl hover:bg-sky-600 cursor-pointer"
+                                            title="Minus"
+                                        >
+                                            <Minus />
+                                        </button>
+                                        <input
+                                            value={qty}
+                                            onChange={handleChangeQuantity}
+                                            className="h-12 border-t border-b border-sky-500 w-12 text-center text-xl font-semibold"
+                                            type="number"
+                                        />
+                                        <button
+                                            onClick={handlePlusQty}
+                                            className="bg-sky-500 text-white w-12 h-12 flex items-center justify-center rounded-br-xl rounded-tr-xl hover:bg-sky-600 cursor-pointer"
+                                            title="Plus"
+                                        >
+                                            <Plus />
+                                        </button>
+                                    </div>
                                     <Button
-                                        className="ml-4"
+                                        className="grow"
                                         size="large"
                                         color={
                                             cartStore.isIncart(data.id)
@@ -160,10 +173,25 @@ const Product = observer(() => {
                                             ? 'Add more'
                                             : 'Add to cart'}
                                     </Button>
-                                </div>
-                                <div className="grid self-center font-semibold leading-tight lg:flex lg:gap-2 lg:text-xl lg:ml-8">
-                                    <span>{data.availabilityStatus}</span>
-                                    <span>{data.stock} pcs</span>
+                                    {userStore.user && (
+                                        <button
+                                            className="cursor-pointer hover:opacity-75 active:scale-105"
+                                            onClick={() =>
+                                                favoriteStore.toggleFavorite(
+                                                    data.id
+                                                )
+                                            }
+                                            title="Add to favorites"
+                                        >
+                                            {favoriteStore.isInFavoite(
+                                                data.id
+                                            ) ? (
+                                                <LucideHeartMinus className="text-rose-600" />
+                                            ) : (
+                                                <LucideHeartPlus className="text-sky-500" />
+                                            )}
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                             <div className="flex flex-col gap-2 lg:flex-row lg:justify-between">

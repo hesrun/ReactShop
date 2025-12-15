@@ -18,11 +18,11 @@ const Button = ({
     ...props
 }: ButtonProps) => {
     const colorClasses = {
-        blue: 'bg-sky-500 hover:bg-sky-600 text-white',
-        red: 'bg-red-500 hover:bg-red-600 text-white',
-        green: 'bg-green-500 hover:bg-green-600 text-white',
-        gray: 'bg-gray-500 hover:bg-gray-600 text-white',
-        white: 'border border-gray-400 text-gray-800 hover:bg-gray-300 hover:border-gray-300',
+        blue: 'bg-sky-500 hover:bg-sky-600 text-white active:bg-sky-700',
+        red: 'bg-red-500 hover:bg-red-600 text-white active:bg-red-700',
+        green: 'bg-green-500 hover:bg-green-600 text-white active:bg-green-700',
+        gray: 'bg-gray-500 hover:bg-gray-600 text-white active:bg-gray-700',
+        white: 'border border-gray-400 text-gray-800 hover:bg-gray-300 hover:border-gray-300 active:bg-gray-400',
     };
     const sizeClasses = {
         small: 'px-3 h-8 text-sm rounded-md',

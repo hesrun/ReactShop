@@ -14,6 +14,7 @@ import Order from '../pages/Order';
 import Success from '../pages/Sucess';
 import Adresses from '../pages/Adresses';
 import NotFound from '../pages/NotFound';
+import Favorites from '../pages/Favorites';
 
 const router = createBrowserRouter([
     {
@@ -37,6 +38,14 @@ const router = createBrowserRouter([
                     <NoAuth>
                         <Auth />
                     </NoAuth>
+                ),
+            },
+            {
+                path: 'favorite',
+                element: (
+                    <WithAuth>
+                        <Favorites />
+                    </WithAuth>
                 ),
             },
             {

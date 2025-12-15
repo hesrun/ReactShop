@@ -5,6 +5,7 @@ import HeaderSearch from './HeaderSearch';
 import { LucideSearch, LucideX } from 'lucide-react';
 import { useState } from 'react';
 import { useMediaQuery } from '@uidotdev/usehooks';
+import HeaderFavorite from './HeaderFavorite.tsx';
 
 const Header = () => {
     const isDesktop = useMediaQuery('(min-width: 64rem)');
@@ -25,6 +26,7 @@ const Header = () => {
                 )}
                 <div className="ml-auto flex items-center gap-4">
                     <HeaderAccount />
+                    <HeaderFavorite />
                     <HeaderCartBtn />
                     <button
                         type="button"

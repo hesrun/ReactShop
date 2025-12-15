@@ -55,8 +55,7 @@ const CartTable = ({ data, total }: CartTableProps) => {
                             $
                         </div>
                     </div>
-                    <div>
-                        <div className="text-black/50 md:hidden">Quantity</div>
+                    <div className="self-center">
                         <div className="flex">
                             <button
                                 onClick={() =>
