@@ -15,15 +15,35 @@ serve(async (req: Request) => {
   }
 
   try {
-    const order = await req.json();
+    // Проверка на пустое тело
+    const bodyText = await req.text();
+    if (!bodyText) {
+      return new Response(JSON.stringify({ success: false, error: 'Empty request body' }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        }
+      });
+    }
+
+    const order = JSON.parse(bodyText);
     console.log("Incoming order:", order);
 
-    const cartHtml = JSON.parse(order.cart || "[]")
+    // Обработка cart - может быть массивом или строкой
+    let cartItems = [];
+    if (Array.isArray(order.cart)) {
+      cartItems = order.cart;
+    } else if (typeof order.cart === 'string') {
+      cartItems = JSON.parse(order.cart);
+    }
+
+    const cartHtml = cartItems
       .map((item: any) => `
         <tr>
-          <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${item.title}</td>
-          <td style="padding: 10px 0; text-align: center; border-bottom: 1px solid #eee;">${item.quantity}</td>
-          <td style="padding: 10px 0; text-align: right; border-bottom: 1px solid #eee;">$${item.total}</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${item.title || 'N/A'}</td>
+          <td style="padding: 10px 0; text-align: center; border-bottom: 1px solid #eee;">${item.quantity || 1}</td>
+          <td style="padding: 10px 0; text-align: right; border-bottom: 1px solid #eee;">$${item.price || item.total || 0}</td>
         </tr>
       `)
       .join("");
@@ -61,6 +81,13 @@ serve(async (req: Request) => {
           <p><strong>Street:</strong> ${order.street}</p>
           <p><strong>ZIP:</strong> ${order.zip}</p>
           ${order.comment ? `<p><strong>Comment:</strong> ${order.comment}</p>` : ""}
+        </div>
+
+        <h3>Delivery Method:</h3>
+        <div style="background: #f9f9f9; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e5e5;">
+          <p><strong>Method:</strong> ${order.delivery?.name || 'Standard Shipping'}</p>
+          <p><strong>Description:</strong> ${order.delivery?.description || 'Standard delivery'}</p>
+          <p><strong>Cost:</strong> $${order.delivery?.price || 0}</p>
         </div>
 
         <p style="margin-top: 30px; font-size: 14px; color: #555;">
