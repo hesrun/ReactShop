@@ -1,9 +1,10 @@
 import { makeAutoObservable } from 'mobx';
-import type { Product, CartProduct } from '../types/Types';
+import type { Product, CartProduct, Delivery } from '../types/Types';
 import { discountPriceCalc } from '../utlis/price';
 
 class CartStore {
     cart: CartProduct[] = [];
+    delivery: Delivery | null = null;
 
     constructor() {
         makeAutoObservable(this);
@@ -50,10 +51,12 @@ class CartStore {
         }
         this.saveToStorage();
     }
+
     removeProduct(id: number) {
         this.cart = this.cart.filter((product) => product.id !== id);
         this.saveToStorage();
     }
+
     clearCart() {
         this.cart = [];
         this.saveToStorage();
@@ -74,15 +77,26 @@ class CartStore {
     isIncart(id: number) {
         return this.cart.some((item) => item.id === id);
     }
+    setDelivery(delivery: Delivery) {
+        this.delivery = delivery;
+    }
     get totalItems() {
         return this.cart.reduce((summ, item) => summ + item.quantity, 0);
     }
-    get totalSum() {
+    get totalProductsSum() {
         return Number(this.cart
             .reduce((summ, item) => summ + Number(item.total), 0)
             .toFixed(2));
     }
-
+    get deliveryPrice() {
+        return this.delivery ? this.delivery.price : 0;
+    }
+    get totalSum() {
+        if (this.delivery) {
+            return Number((this.totalProductsSum + this.delivery.price).toFixed(2));
+        }
+        return this.totalProductsSum;
+    }
 }
 
 export const cartStore = new CartStore();

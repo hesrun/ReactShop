@@ -47,9 +47,15 @@ const CartForm = observer(({ data, total, address }: CartFormProps) => {
     const onSubmit: SubmitHandler<FormInput> = async (formData) => {
         const order = {
             ...formData,
-            cart: JSON.stringify(data),
+            delivery: cartStore.delivery,
+            cart: data,
             total: total,
         };
+
+        if (!cartStore.delivery) {
+            toast.error('Please select delivery method');
+            return false;
+        }
 
         await ordersStore.addOrder(order as NewOrder);
 
@@ -88,7 +94,7 @@ const CartForm = observer(({ data, total, address }: CartFormProps) => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-4 items-start">
                 <Controller
                     name="fullName"
                     control={control}
@@ -144,7 +150,7 @@ const CartForm = observer(({ data, total, address }: CartFormProps) => {
                     )}
                 />
             </div>
-            <div className="grid md:grid-cols-[1fr_1fr_0.4fr] gap-4">
+            <div className="grid md:grid-cols-[1fr_1fr_0.4fr] gap-4 items-start">
                 <Controller
                     name="city"
                     control={control}

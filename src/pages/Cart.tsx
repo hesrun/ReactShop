@@ -9,6 +9,7 @@ import { userStore } from '../store/userStore';
 import CartAdressess from '../components/common/cart/CartAdressess';
 import { useState } from 'react';
 import type { Address } from '../types/Types';
+import CartDelivery from '../components/common/cart/CartDelivery';
 
 const Cart = observer(() => {
     const [pickedAddress, setPickedAddress] = useState<Address | null>(null);
@@ -21,16 +22,18 @@ const Cart = observer(() => {
 
             {cartStore.totalItems > 0 && (
                 <>
-                    <CartTable
-                        data={cartStore.cart}
-                        total={cartStore.totalSum}
-                    />
+                    <CartTable />
+
+                    <CartDelivery />
+
                     <Title type="h2" className="mb-8">
                         Personal data
                     </Title>
+
                     {userStore.user && (
                         <CartAdressess onClick={setPickedAddress} />
                     )}
+
                     <CartForm
                         data={cartStore.cart}
                         total={cartStore.totalSum}

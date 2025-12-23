@@ -1,9 +1,15 @@
 import { serve } from "https://deno.land/std@0.203.0/http/server.ts";
 
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!;
-const RESEND_FROM_EMAIL = Deno.env.get('RESEND_FROM_EMAIL')!;
+// Берём env-переменные безопасно
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const RESEND_FROM_EMAIL = Deno.env.get("RESEND_FROM_EMAIL");
+
+if (!RESEND_API_KEY || !RESEND_FROM_EMAIL) {
+  throw new Error("Missing RESEND_API_KEY or RESEND_FROM_EMAIL in env");
+}
 
 serve(async (req: Request) => {
+  // CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, {
       headers: {
@@ -18,16 +24,17 @@ serve(async (req: Request) => {
     const order = await req.json();
     console.log("Incoming order:", order);
 
-    const cartHtml = JSON.parse(order.cart || "[]")
-      .map((item: any) => `
-        <tr>
-          <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${item.title}</td>
-          <td style="padding: 10px 0; text-align: center; border-bottom: 1px solid #eee;">${item.quantity}</td>
-          <td style="padding: 10px 0; text-align: right; border-bottom: 1px solid #eee;">$${item.total}</td>
-        </tr>
-      `)
-      .join("");
+    // Безопасно парсим корзину
+    const cartItems = typeof order.cart === "string" ? JSON.parse(order.cart) : order.cart || [];
+    const cartHtml = cartItems.map((item: any) => `
+      <tr>
+        <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${item.title}</td>
+        <td style="padding: 10px 0; text-align: center; border-bottom: 1px solid #eee;">${item.quantity}</td>
+        <td style="padding: 10px 0; text-align: right; border-bottom: 1px solid #eee;">$${item.total}</td>
+      </tr>
+    `).join("");
 
+    // HTML письма
     const html = `
       <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px;">
         <h2 style="color: #2b2b2b; border-bottom: 2px solid #eee; padding-bottom: 10px;">
@@ -55,6 +62,14 @@ serve(async (req: Request) => {
           <tbody>${cartHtml}</tbody>
         </table>
 
+        <h3>Delivery Details:</h3>
+        <div style="background: #f9f9f9; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e5e5;">
+          <p><strong>Method:</strong> ${order.delivery?.name}</p>
+          <p><strong>Description:</strong> ${order.delivery?.description}</p>
+          <p><strong>Estimated time:</strong> ${order.delivery?.estimatedTime}</p>
+          <p><strong>Price:</strong> $${order.delivery?.price}</p>
+        </div>
+
         <h3>Shipping Details:</h3>
         <div style="background: #f9f9f9; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e5e5;">
           <p><strong>City:</strong> ${order.city}</p>
@@ -71,11 +86,12 @@ serve(async (req: Request) => {
       </div>
     `;
 
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
+    // Отправка через Resend API
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
         from: RESEND_FROM_EMAIL,
@@ -91,8 +107,9 @@ serve(async (req: Request) => {
     return new Response(JSON.stringify({ success: true, data }), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
     });
 
   } catch (err) {
@@ -100,8 +117,8 @@ serve(async (req: Request) => {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       status: 500,
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
     });
   }

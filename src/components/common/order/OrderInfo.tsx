@@ -1,4 +1,4 @@
-import type { CartProduct, Order } from '../../../types/Types';
+import type { Order } from '../../../types/Types';
 import { dateFormat } from '../../../utlis/dateFormat';
 
 const OrderInfo = ({ data }: { data: Order }) => {
@@ -6,7 +6,7 @@ const OrderInfo = ({ data }: { data: Order }) => {
         city,
         street,
         zip,
-        cart: cartJson,
+        cart,
         email,
         fullName,
         phone,
@@ -14,8 +14,6 @@ const OrderInfo = ({ data }: { data: Order }) => {
         created_at,
         comment,
     } = data ?? {};
-
-    const cartItems: CartProduct[] = cartJson ? JSON.parse(cartJson) : [];
 
     return (
         <>
@@ -64,7 +62,7 @@ const OrderInfo = ({ data }: { data: Order }) => {
                 <div className="text-right">Total</div>
             </div>
 
-            {cartItems.map((item) => (
+            {cart.map((item) => (
                 <div
                     key={item.id}
                     className="relative py-4 grid grid-cols-2 gap-2 border-b border-black/10 first:pt-0 md:grid-cols-[1fr_120px_100px] md:items-center"

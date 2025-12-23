@@ -30,7 +30,7 @@ const Success = observer(() => {
                             className="text-sky-500 underline hover:no-underline"
                             to={`/account/orders/${ordersStore.lastOrder.id}`}
                         >
-                            Wiew order
+                            View order
                         </Link>
                     ) : (
                         <Link

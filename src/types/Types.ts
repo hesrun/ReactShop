@@ -4,6 +4,13 @@ export interface Category {
     url: string;
 }
 
+export interface Delivery {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    estimatedTime: string;
+}
 export interface Reviews {
     rating: number;
     comment: string;
@@ -72,7 +79,8 @@ export type NewAddress = Omit<Address, 'id'>;
 export interface Order {
     id: number;
     user_id: string | null;
-    cart: string;
+    cart: CartProduct[];
+    delivery: Delivery;
     email: string;
     fullName: string;
     phone: string;
@@ -83,6 +91,7 @@ export interface Order {
     created_at?: string;
     comment?: string;
 }
+
 export type NewOrder = Omit<Order, 'id'>;
 
 

@@ -1,14 +1,10 @@
 import { Link } from 'react-router';
 import { Minus, Plus, Trash } from 'lucide-react';
-import type { CartProduct } from '../../../types/Types';
 import { discountPriceCalc } from '../../../utlis/price';
 import { cartStore } from '../../../store/cartStore';
-interface CartTableProps {
-    data: CartProduct[];
-    total: CartProduct['total'];
-}
+import { observer } from 'mobx-react-lite';
 
-const CartTable = ({ data, total }: CartTableProps) => {
+const CartTable = observer(() => {
     const handleQuantityChange = (id: number, qty: number) => {
         cartStore.adjustQuantity(id, qty);
     };
@@ -22,7 +18,7 @@ const CartTable = ({ data, total }: CartTableProps) => {
                 <div>Total</div>
                 <div></div>
             </div>
-            {data.map((product) => (
+            {cartStore.cart.map((product) => (
                 <div
                     key={product.id}
                     className="relative py-4 grid grid-cols-3 gap-2 border-b border-black/10 first:pt-0 md:grid-cols-[5fr_1fr_1fr_1fr_50px] md:items-center"
@@ -112,11 +108,34 @@ const CartTable = ({ data, total }: CartTableProps) => {
                     </div>
                 </div>
             ))}
-            <div className="text-right text-2xl font-bold my-8">
-                Total: <span className="text-sky-500">{total}</span> $
+            <div className="text-right my-8">
+                <table className="font-bold ml-auto">
+                    <tbody>
+                        <tr>
+                            <td>Products total:</td>
+                            <td className="pl-4 text-sky-500">
+                                {cartStore.totalProductsSum} $
+                            </td>
+                        </tr>
+                        {cartStore.delivery && (
+                            <tr>
+                                <td>Delivery:</td>
+                                <td className="pl-4 text-sky-500">
+                                    {cartStore.deliveryPrice} $
+                                </td>
+                            </tr>
+                        )}
+                        <tr className="text-xl">
+                            <td>Total:</td>
+                            <td className="pl-4 text-sky-500">
+                                {cartStore.totalSum} $
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </>
     );
-};
+});
 
 export default CartTable;
