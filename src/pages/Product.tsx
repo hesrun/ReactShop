@@ -181,9 +181,15 @@ const Product = observer(() => {
                                                     data.id
                                                 )
                                             }
-                                            title="Add to favorites"
+                                            title={
+                                                favoriteStore.isFavorite(
+                                                    data.id
+                                                )
+                                                    ? 'Remove from favorites'
+                                                    : 'Add to favorites'
+                                            }
                                         >
-                                            {favoriteStore.isInFavoite(
+                                            {favoriteStore.isFavorite(
                                                 data.id
                                             ) ? (
                                                 <LucideHeartMinus className="text-rose-600" />

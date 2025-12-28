@@ -10,6 +10,7 @@ import CartAdressess from '../components/common/cart/CartAdressess';
 import { useState } from 'react';
 import type { Address } from '../types/Types';
 import CartDelivery from '../components/common/cart/CartDelivery';
+import { addressStore } from '../store/addressStore';
 
 const Cart = observer(() => {
     const [pickedAddress, setPickedAddress] = useState<Address | null>(null);
@@ -30,7 +31,7 @@ const Cart = observer(() => {
                         Personal data
                     </Title>
 
-                    {userStore.user && (
+                    {userStore.user && addressStore.addresses.length > 0 && (
                         <CartAdressess onClick={setPickedAddress} />
                     )}
 

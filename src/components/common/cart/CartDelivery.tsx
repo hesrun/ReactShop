@@ -22,6 +22,7 @@ const CartDelivery = observer(() => {
                             type="radio"
                             id={delivery.name}
                             className="box-content h-1.5 w-1.5 appearance-none rounded-full border-[5px] border-white bg-white bg-clip-padding ring-1 ring-gray-950/20 outline-none checked:border-sky-500 checked:ring-sky-500"
+                            checked={cartStore.delivery?.id === delivery.id}
                         />
                         <div className="flex flex-col grow">
                             <span className="font-bold">{delivery.name}</span>

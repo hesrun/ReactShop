@@ -1,3 +1,4 @@
+import { toJS } from 'mobx';
 import type { Order } from '../../../types/Types';
 import { dateFormat } from '../../../utlis/dateFormat';
 
@@ -14,6 +15,10 @@ const OrderInfo = ({ data }: { data: Order }) => {
         created_at,
         comment,
     } = data ?? {};
+
+    console.log('====================================');
+    console.log(toJS(data));
+    console.log('====================================');
 
     return (
         <>
@@ -47,6 +52,17 @@ const OrderInfo = ({ data }: { data: Order }) => {
                         Create date
                     </div>
                     <div>{created_at && dateFormat(created_at)}</div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 border-b border-black/10 pb-2">
+                    <div className="text-sm font-semibold text-slate-600">
+                        Delivery
+                    </div>
+                    <div>
+                        <span className="block">{data.delivery.name}</span>
+                        <span className="text-black/70 text-sm">
+                            {data.delivery.description}
+                        </span>
+                    </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 pb-2">
                     <div className="text-sm font-semibold text-slate-600">
@@ -89,11 +105,20 @@ const OrderInfo = ({ data }: { data: Order }) => {
                     </div>
                 </div>
             ))}
-
-            <div className="flex gap-4 justify-end mt-4 items-baseline text-xl">
-                <div className="text-sky-500 font-bold">Total:</div>
-                <div className="font-bold">{total}$</div>
-            </div>
+            <table className="font-bold ml-auto mt-8">
+                <tbody>
+                    <tr>
+                        <td>Delivery:</td>
+                        <td className="pl-4 text-sky-500">
+                            {data.delivery.price}$
+                        </td>
+                    </tr>
+                    <tr className="text-xl">
+                        <td>Total:</td>
+                        <td className="pl-4 text-sky-500">{total}$</td>
+                    </tr>
+                </tbody>
+            </table>
         </>
     );
 };

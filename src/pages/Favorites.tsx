@@ -8,7 +8,7 @@ import { LucideHeart } from 'lucide-react';
 import CatalogSkeleton from '../components/skeletons/CatalogSkeleton';
 
 const Favorites = observer(() => {
-    const data = favoriteStore.products;
+    const data = favoriteStore.favoriteProducts;
     useEffect(() => {
         favoriteStore.getFavoriteProducts();
     }, []);

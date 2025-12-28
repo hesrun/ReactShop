@@ -13,12 +13,12 @@ async function fetchProduct(id: number) {
 }
 
 class FavoriteStore {
-    favorites: number[] = [];
-    products: Product[] = [];
+    favoriteIds: number[] = [];
+    favoriteProducts: Product[] = [];
     loading: boolean = false;
 
     constructor() {
-        makeAutoObservable(this);
+        makeAutoObservable(this)
     }
 
     async addFavorite(product_id: number) {
@@ -37,7 +37,7 @@ class FavoriteStore {
             } else if (data) {
                 const id = data.product_id;
                 toast.success(`Was added to favorites`);
-                this.favorites.push(id);
+                this.favoriteIds.push(id);
             }
         } finally {
             this.loading = false;
@@ -52,7 +52,7 @@ class FavoriteStore {
                 toast.error(error.message);
             } else if (data) {
                 console.log(data);
-                this.favorites = data?.map(row => row.product_id) ?? []
+                this.favoriteIds = data?.map(row => row.product_id) ?? []
             }
         } finally {
             this.loading = false;
@@ -60,7 +60,6 @@ class FavoriteStore {
     }
 
     async removeFavorite(product_id: number) {
-        this.loading = true;
         try {
             await supabase
                 .from(tableName)
@@ -68,15 +67,17 @@ class FavoriteStore {
                 .eq('product_id', product_id)
                 .eq('user_id', userStore.user?.id);
 
-            this.favorites = this.favorites.filter(id => id !== product_id);
+            this.favoriteIds = this.favoriteIds.filter(id => id !== product_id);
+            this.favoriteProducts = this.favoriteProducts.filter(product => product.id !== product_id);
             toast.info('Removed from favorites');
-        } finally {
-            this.loading = false;
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'Unknown error';
+            toast.error(message);
         }
     }
 
     async toggleFavorite(product_id: number) {
-        if (this.isInFavoite(product_id)) {
+        if (this.isFavorite(product_id)) {
             await this.removeFavorite(product_id);
         } else {
             await this.addFavorite(product_id);
@@ -88,20 +89,20 @@ class FavoriteStore {
         try {
             await this.getFavorites();
             const products = await Promise.all(
-                this.favorites.map(id => fetchProduct(id))
+                this.favoriteIds.map(id => fetchProduct(id))
             );
-            this.products = products;
+            this.favoriteProducts = products;
         } finally {
             this.loading = false;
         }
     }
 
-    isInFavoite(id: number) {
-        return this.favorites.includes(id)
+    isFavorite(id: number) {
+        return this.favoriteIds.includes(id)
     }
 
     get favoritesCount() {
-        return this.favorites.length
+        return this.favoriteIds.length
     }
 
 }
