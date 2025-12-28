@@ -9,12 +9,12 @@ const CartDelivery = observer(() => {
             <Title type="h2" className="mb-8">
                 Delivery options
             </Title>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid gap-2 lg:grid-cols-3 lg:gap-4 mb-8">
                 {deliveries.map((delivery) => (
                     <label
                         htmlFor={delivery.name}
                         key={delivery.id}
-                        className="flex items-center border border-black/10 rounded-lg p-4 mb-4 gap-4 cursor-pointer has-checked:border-sky-500 has-focus-within:ring-1 has-focus-within:ring-sky-500"
+                        className="flex items-center border border-black/10 rounded-lg p-4 gap-4 cursor-pointer has-checked:border-sky-500 has-focus-within:ring-1 has-focus-within:ring-sky-500"
                     >
                         <input
                             onChange={() => cartStore.setDelivery(delivery)}

@@ -39,7 +39,7 @@ const Category = () => {
         );
     }
     return (
-        <div>
+        <>
             {category && (
                 <Title type="h1">
                     <span className="text-sky-500 capitalize">
@@ -55,7 +55,7 @@ const Category = () => {
                     ))}
                 </div>
             )}
-        </div>
+        </>
     );
 };
 
